@@ -1,0 +1,20 @@
+<vehicles>
+    <vehicle>
+        <id>1</id>
+        <type>ar</type>
+        <plateNumber>AA1234BB</plateNumber>
+        <couriersId>1</couriersId>
+    </vehicle>
+    <vehicle>
+        <id>2</id>
+        <type>scooter</type>
+        <plateNumber>BC5678CD</plateNumber>
+        <couriersId>2</couriersId>
+    </vehicle>
+    <vehicle>
+        <id>3</id>
+        <type>bicycle</type>
+        <plateNumber>AB4799BB</plateNumber>
+        <couriersId>3</couriersId>
+    </vehicle>
+</vehicles>

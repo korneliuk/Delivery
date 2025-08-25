@@ -1,0 +1,23 @@
+<couriers>
+    <courier>
+        <id>1</id>
+        <name>Ivan</name>
+        <lastName>Kovalenko</lastName>
+        <phone>+380501111222</phone>
+        <vehicleInfo>Toyota Prius</vehicleInfo>
+    </courier>
+    <courier>
+        <id>2</id>
+        <name>Olena</name>
+        <lastName>Marchenko</lastName>
+        <phone>+380671234567</phone>
+        <vehicleInfo>NULL</vehicleInfo>
+    </courier>
+    <courier>
+        <id>3</id>
+        <name>Andriy</name>
+        <lastName>NULL</lastName>
+        <phone>+380931112233</phone>
+        <vehicleInfo>Bicycle</vehicleInfo>
+    </courier>
+</couriers>

@@ -7,10 +7,13 @@ import com.solvd.delivery.util.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Properties;
 
 public class Main {
 
@@ -19,6 +22,24 @@ public class Main {
 
     // ERROR, DEBUG
     private static final Logger LOG = LogManager.getLogger(Main.class);
+
+    private static String couriersXMLFilePath;
+    private static String vehiclesXMLFilePath;
+
+    static {
+        Properties p = new Properties();
+        try (InputStream in = ConnectionPool.class
+                .getClassLoader().getResourceAsStream("config.properties")) {
+            if (in == null)
+                throw new IllegalStateException("database.properties not found");
+            p.load(in);
+            couriersXMLFilePath = p.getProperty("xml.couriers");
+            vehiclesXMLFilePath = p.getProperty("xml.vehicles");
+
+        } catch (IOException e) {
+            LOG.error("Error initialization XML files paths", e);
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -51,9 +72,12 @@ public class Main {
             testOrderService(order);
             testPaymentService(payment);
             testRatingService(rating);
+            testCourierXMLService();
+            PRINT.info("\n");
+            testVehicleXMLService();
 
             ConnectionPool.closeAllConnections();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             LOG.error(e);
         }
     }
@@ -119,7 +143,7 @@ public class Main {
 
         paymentService.getById(2);
 
-        paymentService.getAll().forEach(p-> PRINT.info(
+        paymentService.getAll().forEach(p -> PRINT.info(
                 "Payment Id: {}\tPayment status: {}\n", p.id(), p.paymentStatus()
         ));
         PRINT.info("\n");
@@ -128,7 +152,7 @@ public class Main {
         paymentService.update(payment);
         paymentService.deleteById(payment.id());
 
-        paymentService.getAll().forEach(p-> PRINT.info(
+        paymentService.getAll().forEach(p -> PRINT.info(
                 "Payment Id: {}\tPayment status: {}\n", p.id(), p.paymentStatus()
         ));
         PRINT.info("\n");
@@ -139,7 +163,7 @@ public class Main {
 
         ratingService.getById(2);
 
-        ratingService.getAll().forEach(r->PRINT.info(
+        ratingService.getAll().forEach(r -> PRINT.info(
                 "Rating Id: {}\tScore: {}\n", r.id(), r.score()
         ));
         PRINT.info("\n");
@@ -148,9 +172,25 @@ public class Main {
         ratingService.update(rating);
         ratingService.deleteById(rating.id());
 
-        ratingService.getAll().forEach(r->PRINT.info(
+        ratingService.getAll().forEach(r -> PRINT.info(
                 "Rating Id: {}\tScore: {}\n", r.id(), r.score()
         ));
         PRINT.info("\n");
+    }
+
+    private static void testCourierXMLService() throws Exception {
+        CourierXMLService courierXMLService = new CourierXMLService();
+
+        PRINT.info("Couriers from XML:\n");
+        courierXMLService.loadCouriersFromXml(couriersXMLFilePath)
+                .forEach((courier) -> PRINT.info("{}\n", courier));
+    }
+
+    private static void testVehicleXMLService() throws Exception {
+        VehicleXMLService vehicleXMLService = new VehicleXMLService();
+
+        PRINT.info("Vehicles from XML:\n");
+        vehicleXMLService.loadVehiclesFromXml(vehiclesXMLFilePath)
+                .forEach((vehicle) -> PRINT.info("{}\n", vehicle));
     }
 }
