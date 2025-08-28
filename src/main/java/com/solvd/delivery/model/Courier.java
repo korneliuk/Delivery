@@ -1,5 +1,11 @@
 package com.solvd.delivery.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlType;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = {"id", "name", "lastName", "phone", "vehicleInfo"})
 public class Courier {
     private int id;
     private String name;

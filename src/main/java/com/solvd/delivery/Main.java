@@ -25,6 +25,7 @@ public class Main {
 
     private static String couriersXMLFilePath;
     private static String vehiclesXMLFilePath;
+    private static String couriersXSDFilePath;
 
     static {
         Properties p = new Properties();
@@ -35,6 +36,7 @@ public class Main {
             p.load(in);
             couriersXMLFilePath = p.getProperty("xml.couriers");
             vehiclesXMLFilePath = p.getProperty("xml.vehicles");
+            couriersXSDFilePath = p.getProperty("xsd.couriers");
 
         } catch (IOException e) {
             LOG.error("Error initialization XML files paths", e);
@@ -67,22 +69,22 @@ public class Main {
         Rating rating = new Rating(3, 4, null, 3, 2, 6);
 
         try {
-            testClientService(client);
-            testDeliveryService(delivery);
-            testOrderService(order);
-            testPaymentService(payment);
-            testRatingService(rating);
+//            testClientService(client);
+//            testDeliveryService(delivery);
+//            testOrderService(order);
+//            testPaymentService(payment);
+//            testRatingService(rating);
             testCourierXMLService();
             PRINT.info("\n");
-            testVehicleXMLService();
+//            testVehicleXMLService();
 
-            ConnectionPool.closeAllConnections();
+            ConnectionPool.getInstance().closeAllConnections();
         } catch (Exception e) {
             LOG.error(e);
         }
     }
 
-    private static void testClientService(final Client client) throws SQLException {
+    private static void testClientService(final Client client) throws SQLException, IOException {
         IClientService clientService = new ClientService();
 
         clientService.getById(2);
@@ -98,7 +100,7 @@ public class Main {
         PRINT.info("\n");
     }
 
-    private static void testDeliveryService(final Delivery delivery) throws SQLException {
+    private static void testDeliveryService(final Delivery delivery) throws SQLException, IOException {
         IDeliveryService deliveryService = new DeliveryService();
 
         deliveryService.getById(2);
@@ -118,7 +120,7 @@ public class Main {
         PRINT.info("\n");
     }
 
-    private static void testOrderService(Order order) throws SQLException {
+    private static void testOrderService(Order order) throws SQLException, IOException {
         IOrderService orderService = new OrderService();
 
         orderService.getById(2);
@@ -138,7 +140,7 @@ public class Main {
         PRINT.info("\n");
     }
 
-    private static void testPaymentService(Payment payment) throws SQLException {
+    private static void testPaymentService(Payment payment) throws SQLException, IOException {
         IPaymentService paymentService = new PaymentService();
 
         paymentService.getById(2);
@@ -158,7 +160,7 @@ public class Main {
         PRINT.info("\n");
     }
 
-    private static void testRatingService(Rating rating) throws SQLException {
+    private static void testRatingService(Rating rating) throws SQLException, IOException {
         IRatingService ratingService = new RatingService();
 
         ratingService.getById(2);
@@ -183,6 +185,10 @@ public class Main {
 
         PRINT.info("Couriers from XML:\n");
         courierXMLService.loadCouriersFromXml(couriersXMLFilePath)
+                .forEach((courier) -> PRINT.info("{}\n", courier));
+
+        PRINT.info("\nCouriers from XML with XSD schema validation:\n");
+        courierXMLService.loadCouriersFromXml(couriersXMLFilePath, couriersXSDFilePath).getCouriers()
                 .forEach((courier) -> PRINT.info("{}\n", courier));
     }
 
