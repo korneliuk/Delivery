@@ -26,6 +26,7 @@ public class Main {
     private static String couriersXMLFilePath;
     private static String vehiclesXMLFilePath;
     private static String couriersXSDFilePath;
+    private static String promotionsJsonFilePath;
 
     static {
         Properties p = new Properties();
@@ -37,6 +38,7 @@ public class Main {
             couriersXMLFilePath = p.getProperty("xml.couriers");
             vehiclesXMLFilePath = p.getProperty("xml.vehicles");
             couriersXSDFilePath = p.getProperty("xsd.couriers");
+            promotionsJsonFilePath = p.getProperty("json.promotions");
 
         } catch (IOException e) {
             LOG.error("Error initialization XML files paths", e);
@@ -69,14 +71,15 @@ public class Main {
         Rating rating = new Rating(3, 4, null, 3, 2, 6);
 
         try {
-//            testClientService(client);
-//            testDeliveryService(delivery);
-//            testOrderService(order);
-//            testPaymentService(payment);
-//            testRatingService(rating);
+            testClientService(client);
+            testDeliveryService(delivery);
+            testOrderService(order);
+            testPaymentService(payment);
+            testRatingService(rating);
             testCourierXMLService();
             PRINT.info("\n");
-//            testVehicleXMLService();
+            testVehicleXMLService();
+            testPromotionJsonService();
 
             ConnectionPool.getInstance().closeAllConnections();
         } catch (Exception e) {
@@ -198,5 +201,13 @@ public class Main {
         PRINT.info("Vehicles from XML:\n");
         vehicleXMLService.loadVehiclesFromXml(vehiclesXMLFilePath)
                 .forEach((vehicle) -> PRINT.info("{}\n", vehicle));
+    }
+
+    private static void testPromotionJsonService() throws IOException {
+        PromotionJsonService promotionJsonService = new PromotionJsonService();
+
+        PRINT.info("Promotions from Json:\n");
+        promotionJsonService.loadPromotionsFromJson(promotionsJsonFilePath)
+                .forEach((promotion) -> PRINT.info("{}\n", promotion));
     }
 }
